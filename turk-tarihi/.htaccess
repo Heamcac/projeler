@@ -1,0 +1,13 @@
+Options -Indexes
+RewriteEngine On
+
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+RewriteRule ^devlet/([a-z0-9-]+)/?$ devlet.php?slug=$1 [L,QSA]
+RewriteRule ^hukumdar/([a-z0-9-]+)/?$ hukumdar.php?slug=$1 [L,QSA]
+RewriteRule ^savas/([a-z0-9-]+)/?$ savas.php?slug=$1 [L,QSA]
+RewriteRule ^kultur/([a-z0-9-]+)/?$ kultur.php?slug=$1 [L,QSA]
+RewriteRule ^destan/([a-z0-9-]+)/?$ destanlar.php?slug=$1 [L,QSA]
+
+ErrorDocument 404 /404.php
+

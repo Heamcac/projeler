@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: virtualfit
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_DB: virtualfit
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U virtualfit"]
+      interval: 5s
+      retries: 10
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory-policy", "noeviction"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 10
+  migrate:
+    build: .
+    command: ["node", "dist/src/migrate.js"]
+    environment: &app-env
+      NODE_ENV: production
+      DB_MODE: postgres
+      QUEUE_MODE: redis
+      DATABASE_URL: postgres://virtualfit:${POSTGRES_PASSWORD}@postgres:5432/virtualfit
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:?Set public HTTPS URL}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://example.com}
+      TRYON_PROVIDER: ${TRYON_PROVIDER:-demo}
+      VTON_ENDPOINT: ${VTON_ENDPOINT:-}
+      VTON_API_KEY: ${VTON_API_KEY:-}
+      VTON_MODEL_VERSION: ${VTON_MODEL_VERSION:-http-provider-v1}
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-}
+      RESULT_HOSTS: ${RESULT_HOSTS:-}
+    depends_on:
+      postgres: { condition: service_healthy }
+  api:
+    build: .
+    environment: *app-env
+    ports:
+      - "127.0.0.1:3100:3100"
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      redis: { condition: service_healthy }
+volumes:
+  postgres-data:
+  redis-data:

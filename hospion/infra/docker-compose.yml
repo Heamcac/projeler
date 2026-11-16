@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: hospion-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hospion
+      POSTGRES_PASSWORD: hospion
+      POSTGRES_DB: hospion
+    ports:
+      - "5432:5432"
+    volumes:
+      - hospion_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hospion -d hospion"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  hospion_pg_data:

@@ -1,0 +1,106 @@
+@media (max-width: 1024px) {
+    .card-grid,
+    .list-grid,
+    .admin-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .split-band,
+    .museum-band,
+    .two-column,
+    .detail-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-body {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-sidebar {
+        position: static;
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-toggle { display: grid; place-items: center; }
+
+    .site-header {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .site-nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+    }
+
+    .site-nav.open { display: flex; }
+
+    .site-nav a {
+        padding: 10px 0;
+    }
+
+    .hero {
+        min-height: 70vh;
+        padding-top: 86px;
+    }
+
+    .section-heading,
+    .admin-heading,
+    .site-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .card-grid,
+    .list-grid,
+    .admin-cards,
+    .inline-form {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .info-panel dl {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-main {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 430px) {
+    .hero h1,
+    .page-hero h1,
+    .detail-hero h1 {
+        font-size: 38px;
+    }
+
+    .hero p,
+    .page-hero p,
+    .detail-hero p {
+        font-size: 16px;
+    }
+
+    .section,
+    .page-hero,
+    .detail-hero {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .admin-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+

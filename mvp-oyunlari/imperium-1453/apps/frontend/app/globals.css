@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f6f0e6;
+  color: #1f2933;
+}
+
+button,
+select {
+  font: inherit;
+}
+
+.imperium-map {
+  display: block;
+  background: #5e9298;
+}
+
+.map-current path {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 34;
+  stroke-linecap: round;
+  filter: blur(18px);
+  animation: sea-drift 12s ease-in-out infinite alternate;
+}
+
+.map-current path:nth-child(2) {
+  animation-delay: -3s;
+}
+
+.map-current path:nth-child(3) {
+  animation-delay: -6s;
+}
+
+.map-land path {
+  fill: #d9c18a;
+  fill-opacity: 0.42;
+  stroke: rgba(71, 54, 31, 0.22);
+  stroke-width: 2;
+}
+
+.map-grid path {
+  fill: none;
+  stroke: rgba(255, 250, 240, 0.22);
+  stroke-width: 1;
+  stroke-dasharray: 4 9;
+}
+
+.sea-routes path {
+  fill: none;
+  stroke: rgba(255, 250, 220, 0.62);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 9 14;
+  animation: route-sail 5.5s linear infinite;
+}
+
+.province polygon {
+  cursor: pointer;
+  transition:
+    filter 160ms ease,
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.province:hover polygon {
+  filter: brightness(1.09);
+}
+
+.province.selected polygon:first-of-type {
+  filter: drop-shadow(0 6px 10px rgba(17, 24, 39, 0.35));
+}
+
+.selection-glow {
+  animation: selected-breathe 1.9s ease-in-out infinite;
+}
+
+.siege-pulse {
+  fill: none;
+  stroke: #fff2a8;
+  stroke-width: 4;
+  animation: siege-pulse 1.4s ease-out infinite;
+}
+
+.map-labels text {
+  fill: rgba(31, 41, 51, 0.42);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+@keyframes route-sail {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -46;
+  }
+}
+
+@keyframes sea-drift {
+  from {
+    transform: translate3d(-8px, -4px, 0);
+  }
+
+  to {
+    transform: translate3d(10px, 5px, 0);
+  }
+}
+
+@keyframes selected-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+
+  50% {
+    opacity: 0.95;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes siege-pulse {
+  from {
+    opacity: 0.9;
+    r: 13;
+  }
+
+  to {
+    opacity: 0;
+    r: 34;
+  }
+}

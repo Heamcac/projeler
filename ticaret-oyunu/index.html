@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TradeRealm - Pazar Prototipi</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #10130f;
+      --panel: #171b16;
+      --panel-2: #20261e;
+      --ink: #f3efe2;
+      --muted: #b9b19f;
+      --line: #3a4233;
+      --gold: #d9ad4d;
+      --green: #68b57b;
+      --red: #d66b61;
+      --blue: #6da8d9;
+      --clay: #bd7651;
+      --shadow: 0 16px 50px rgba(0, 0, 0, .34);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(217, 173, 77, .13), transparent 28rem),
+        linear-gradient(135deg, #0c100d 0%, #151913 54%, #1f241a 100%);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      min-height: 38px;
+      border: 1px solid rgba(243, 239, 226, .15);
+      background: #2a3125;
+      color: var(--ink);
+      border-radius: 7px;
+      cursor: pointer;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+
+    button:hover { transform: translateY(-1px); border-color: rgba(217, 173, 77, .5); }
+    button:disabled { opacity: .48; cursor: not-allowed; transform: none; }
+
+    input, select {
+      width: 100%;
+      min-height: 38px;
+      border-radius: 7px;
+      border: 1px solid var(--line);
+      background: #11150f;
+      color: var(--ink);
+      padding: 0 10px;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 16px clamp(14px, 3vw, 34px);
+      border-bottom: 1px solid rgba(243, 239, 226, .12);
+      background: rgba(13, 16, 12, .82);
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .crest {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: linear-gradient(145deg, #614129, #d9ad4d);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.2);
+      flex: 0 0 auto;
+    }
+
+    .crest svg { width: 28px; height: 28px; }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(22px, 3vw, 34px);
+      line-height: 1;
+    }
+
+    .subtitle {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 70ch;
+    }
+
+    .stats {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .stat {
+      min-width: 96px;
+      padding: 9px 12px;
+      border: 1px solid rgba(243, 239, 226, .14);
+      border-radius: 8px;
+      background: rgba(31, 38, 29, .78);
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 17px;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(280px, 340px) minmax(360px, 1fr) minmax(280px, 370px);
+      gap: 18px;
+      padding: 18px clamp(14px, 3vw, 34px) 28px;
+    }
+
+    .panel {
+      background: rgba(23, 27, 22, .92);
+      border: 1px solid rgba(243, 239, 226, .13);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .panel header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 15px;
+      border-bottom: 1px solid rgba(243, 239, 226, .1);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    .panel-body { padding: 14px 15px 16px; }
+
+    .inventory {
+      display: grid;
+      gap: 10px;
+    }
+
+    .item-row, .listing, .city-row, .recipe {
+      display: grid;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid rgba(243, 239, 226, .1);
+      background: rgba(32, 38, 30, .75);
+      border-radius: 8px;
+    }
+
+    .item-row {
+      grid-template-columns: 42px 1fr auto;
+      padding: 10px;
+      min-height: 64px;
+    }
+
+    .icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: #11150f;
+      border: 1px solid rgba(243, 239, 226, .11);
+    }
+
+    .icon svg { width: 29px; height: 29px; }
+
+    .name { font-weight: 750; }
+    .meta { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .qty { font-size: 20px; font-weight: 800; color: var(--gold); }
+
+    .map {
+      min-height: 300px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(45deg, rgba(104, 181, 123, .12), transparent 32%),
+        linear-gradient(145deg, #1b241a, #26301d);
+    }
+
+    .map svg {
+      width: 100%;
+      height: 300px;
+      display: block;
+    }
+
+    .city-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .city-btn {
+      padding: 10px;
+      text-align: left;
+      min-height: 78px;
+      background: rgba(17, 21, 15, .8);
+    }
+
+    .city-btn.active {
+      border-color: var(--gold);
+      background: rgba(217, 173, 77, .14);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 0 13px;
+      min-height: 34px;
+      background: #151a13;
+    }
+
+    .tab.active {
+      background: var(--gold);
+      color: #1b1307;
+      border-color: rgba(255,255,255,.25);
+      font-weight: 800;
+    }
+
+    .market-list, .recipes {
+      display: grid;
+      gap: 10px;
+      max-height: 390px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .listing {
+      grid-template-columns: 42px 1fr auto;
+      padding: 10px;
+      min-height: 76px;
+    }
+
+    .price {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .price strong {
+      display: block;
+      color: var(--gold);
+      font-size: 17px;
+    }
+
+    .small-btn {
+      min-height: 32px;
+      padding: 0 10px;
+      margin-top: 6px;
+    }
+
+    .recipe {
+      padding: 11px;
+      grid-template-columns: 1fr auto;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 90px;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .primary {
+      background: linear-gradient(135deg, #b88034, #d9ad4d);
+      color: #1a1207;
+      font-weight: 850;
+      border-color: rgba(255,255,255,.18);
+    }
+
+    .danger { color: #fff2ef; background: #61302b; }
+
+    .feed {
+      display: grid;
+      gap: 8px;
+      max-height: 180px;
+      overflow: auto;
+    }
+
+    .feed p {
+      margin: 0;
+      padding: 9px 10px;
+      border-radius: 7px;
+      background: rgba(17, 21, 15, .68);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .section-title {
+      margin: 18px 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .badge {
+      color: #181208;
+      background: var(--gold);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .empty {
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 1120px) {
+      main { grid-template-columns: 320px 1fr; }
+      .right-col { grid-column: 1 / -1; }
+      .right-col .panel-body { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+      .right-col .section-title { margin-top: 0; }
+    }
+
+    @media (max-width: 760px) {
+      .topbar { grid-template-columns: 1fr; }
+      .stats { justify-content: stretch; }
+      .stat { flex: 1 1 120px; }
+      main { grid-template-columns: 1fr; }
+      .city-grid { grid-template-columns: 1fr; }
+      .right-col .panel-body { display: block; }
+      .listing { grid-template-columns: 42px 1fr; }
+      .price { grid-column: 1 / -1; text-align: left; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="crest" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none">
+            <path d="M32 6 52 15v15c0 14-8 23-20 28C20 53 12 44 12 30V15L32 6Z" fill="#27180a" stroke="#ffe7a3" stroke-width="3"/>
+            <path d="M22 34h20M25 26h14M30 18h4v30h-4z" stroke="#d9ad4d" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1>TradeRealm</h1>
+          <div class="subtitle">Token yok, gerçek para çekimi yok. Oyuncular arası ticaret, üretim ve pazar ekonomisi prototipi.</div>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><span>Akçe</span><strong id="coins">0</strong></div>
+        <div class="stat"><span>İtibar</span><strong id="rep">0</strong></div>
+        <div class="stat"><span>Gün</span><strong id="day">1</strong></div>
+      </div>
+    </div>
+
+    <main>
+      <section class="panel">
+        <header>
+          <h2>Envanter</h2>
+          <span class="badge">Kapalı ekonomi</span>
+        </header>
+        <div class="panel-body">
+          <div class="inventory" id="inventory"></div>
+          <div class="section-title">Üretim</div>
+          <div class="recipes" id="recipes"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <header>
+          <h2>Harita ve Pazar</h2>
+          <div class="tabs">
+            <button class="tab active" data-tab="market">Pazar</button>
+            <button class="tab" data-tab="sell">İlan Ver</button>
+          </div>
+        </header>
+        <div class="map" aria-label="Ticaret şehirleri haritası">
+          <svg viewBox="0 0 900 300" role="img">
+            <defs>
+              <linearGradient id="river" x1="0" x2="1">
+                <stop offset="0" stop-color="#335d65"/>
+                <stop offset="1" stop-color="#6da8d9"/>
+              </linearGradient>
+            </defs>
+            <path d="M0 218 C160 156 222 242 340 181 C456 122 552 191 635 126 C724 57 785 103 900 55" stroke="url(#river)" stroke-width="22" fill="none" opacity=".85"/>
+            <path d="M50 250 180 112 262 230 380 85 490 244 630 96 742 214 850 76" stroke="#46523b" stroke-width="4" fill="none" opacity=".7"/>
+            <g fill="#26301d" stroke="#d9ad4d" stroke-width="4">
+              <circle cx="176" cy="112" r="20"/><circle cx="380" cy="85" r="20"/><circle cx="630" cy="96" r="20"/><circle cx="742" cy="214" r="20"/>
+            </g>
+            <g fill="#f3efe2" font-size="22" font-weight="800">
+              <text x="125" y="74">Demirhan</text>
+              <text x="335" y="48">Yeşil Liman</text>
+              <text x="579" y="58">Kum Pazarı</text>
+              <text x="690" y="260">Taşkapı</text>
+            </g>
+          </svg>
+        </div>
+        <div class="panel-body">
+          <div class="city-grid" id="cities"></div>
+          <div id="marketView">
+            <div class="section-title">Oyuncu İlanları</div>
+            <div class="market-list" id="market"></div>
+          </div>
+          <div id="sellView" hidden>
+            <div class="section-title">Kendi İlanını Aç</div>
+            <div class="form-grid">
+              <select id="sellItem"></select>
+              <input id="sellQty" type="number" min="1" value="1" aria-label="Adet" />
+              <input id="sellPrice" type="number" min="1" value="18" aria-label="Birim fiyat" />
+              <button class="primary" id="sellBtn">İlan Aç</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="right-col panel">
+        <header>
+          <h2>Tüccar Masası</h2>
+          <button id="nextDay" class="primary">Günü Bitir</button>
+        </header>
+        <div class="panel-body">
+          <div>
+            <div class="section-title">Şehir Talebi</div>
+            <div id="demand"></div>
+          </div>
+          <div>
+            <div class="section-title">Olay Akışı</div>
+            <div class="feed" id="feed"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const items = {
+      wood: { name: "Kereste", icon: "wood", base: 8 },
+      ore: { name: "Maden", icon: "ore", base: 12 },
+      cloth: { name: "Kumaş", icon: "cloth", base: 10 },
+      tools: { name: "Alet Takımı", icon: "tools", base: 28 },
+      spice: { name: "Baharat", icon: "spice", base: 18 },
+      charm: { name: "Usta Nişanı", icon: "charm", base: 45 }
+    };
+
+    const recipes = [
+      { id: "tools", label: "Alet Takımı", cost: { wood: 2, ore: 2 }, gain: { tools: 1 }, rep: 2 },
+      { id: "charm", label: "Usta Nişanı", cost: { cloth: 2, spice: 1, ore: 1 }, gain: { charm: 1 }, rep: 4 }
+    ];
+
+    const cities = [
+      { id: "demirhan", name: "Demirhan", focus: "ore", note: "Maden bol, kumaş pahalı" },
+      { id: "liman", name: "Yeşil Liman", focus: "spice", note: "Baharat ucuz, alet talebi yüksek" },
+      { id: "kum", name: "Kum Pazarı", focus: "cloth", note: "Kumaş bol, nişanlar değerli" },
+      { id: "taskapi", name: "Taşkapı", focus: "wood", note: "Kereste ucuz, baharat arıyor" }
+    ];
+
+    const svgIcons = {
+      wood: '<svg viewBox="0 0 64 64"><path d="M12 41 43 10l9 9-31 31H12v-9Z" fill="#bd7651"/><path d="M20 41 48 13M28 50l25-25" stroke="#5a321f" stroke-width="4" stroke-linecap="round"/></svg>',
+      ore: '<svg viewBox="0 0 64 64"><path d="M16 44 11 26l15-14 21 6 8 19-16 15-23-8Z" fill="#7f8b8d"/><path d="m26 12 4 21 25 4M11 26l19 7-14 11" stroke="#d6dddc" stroke-width="3"/></svg>',
+      cloth: '<svg viewBox="0 0 64 64"><path d="M13 17h38v34H13z" fill="#6da8d9"/><path d="M13 27h38M24 17v34M40 17v34" stroke="#dceefa" stroke-width="4"/></svg>',
+      tools: '<svg viewBox="0 0 64 64"><path d="M18 49 43 24" stroke="#d9ad4d" stroke-width="8" stroke-linecap="round"/><path d="M42 12c6 1 10 5 11 11l-9-3-5 5 3 9c-6-1-10-5-11-11l11-11Z" fill="#9ba5a3"/></svg>',
+      spice: '<svg viewBox="0 0 64 64"><path d="M23 16h18l5 34H18l5-34Z" fill="#d66b61"/><path d="M24 16c1-7 15-7 16 0" stroke="#f0c276" stroke-width="5" fill="none"/><circle cx="28" cy="34" r="3" fill="#431b17"/><circle cx="37" cy="40" r="3" fill="#431b17"/></svg>',
+      charm: '<svg viewBox="0 0 64 64"><path d="M32 8 50 20v24L32 56 14 44V20L32 8Z" fill="#68b57b"/><path d="M32 17v30M21 26h22M24 39h16" stroke="#102016" stroke-width="5" stroke-linecap="round"/></svg>'
+    };
+
+    const npcNames = ["Ayda", "Mert", "Selen", "Baran", "Ece", "Kaan", "Derya", "Nora"];
+
+    const state = {
+      coins: 140,
+      rep: 1,
+      day: 1,
+      city: "demirhan",
+      inventory: { wood: 6, ore: 4, cloth: 3, spice: 2, tools: 0, charm: 0 },
+      listings: [],
+      feed: []
+    };
+
+    function rand(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function icon(id) {
+      return `<div class="icon" aria-hidden="true">${svgIcons[items[id].icon]}</div>`;
+    }
+
+    function cityDemandMultiplier(itemId, cityId = state.city) {
+      const city = cities.find(c => c.id === cityId);
+      const highDemand = {
+        demirhan: ["cloth", "spice"],
+        liman: ["tools", "wood"],
+        kum: ["charm", "ore"],
+        taskapi: ["spice", "tools"]
+      };
+      if (city.focus === itemId) return .78;
+      if (highDemand[city.id].includes(itemId)) return 1.35;
+      return 1;
+    }
+
+    function fairPrice(itemId, cityId = state.city) {
+      return Math.max(2, Math.round(items[itemId].base * cityDemandMultiplier(itemId, cityId) * (0.85 + Math.random() * 0.35)));
+    }
+
+    function seedListings() {
+      state.listings = [];
+      Object.keys(items).forEach(itemId => {
+        if (Math.random() > .18) {
+          state.listings.push({
+            id: crypto.randomUUID(),
+            seller: npcNames[rand(0, npcNames.length - 1)],
+            item: itemId,
+            qty: rand(1, itemId === "charm" ? 2 : 6),
+            price: fairPrice(itemId)
+          });
+        }
+      });
+    }
+
+    function pushFeed(text) {
+      state.feed.unshift(text);
+      state.feed = state.feed.slice(0, 8);
+    }
+
+    function canPay(cost) {
+      return Object.entries(cost).every(([id, qty]) => state.inventory[id] >= qty);
+    }
+
+    function spend(cost) {
+      Object.entries(cost).forEach(([id, qty]) => state.inventory[id] -= qty);
+    }
+
+    function renderInventory() {
+      const el = document.getElementById("inventory");
+      el.innerHTML = Object.entries(items).map(([id, item]) => `
+        <div class="item-row">
+          ${icon(id)}
+          <div>
+            <div class="name">${item.name}</div>
+            <div class="meta">Taban değer: ${item.base} akçe</div>
+          </div>
+          <div class="qty">${state.inventory[id]}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderRecipes() {
+      const el = document.getElementById("recipes");
+      el.innerHTML = recipes.map(recipe => {
+        const cost = Object.entries(recipe.cost).map(([id, qty]) => `${qty} ${items[id].name}`).join(" + ");
+        return `
+          <div class="recipe">
+            <div>
+              <div class="name">${recipe.label}</div>
+              <div class="meta">${cost}</div>
+            </div>
+            <button data-craft="${recipe.id}" ${canPay(recipe.cost) ? "" : "disabled"}>Üret</button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderCities() {
+      const el = document.getElementById("cities");
+      el.innerHTML = cities.map(city => `
+        <button class="city-btn ${city.id === state.city ? "active" : ""}" data-city="${city.id}">
+          <div class="name">${city.name}</div>
+          <div class="meta">${city.note}</div>
+        </button>
+      `).join("");
+    }
+
+    function renderMarket() {
+      const el = document.getElementById("market");
+      if (!state.listings.length) {
+        el.innerHTML = '<div class="empty">Pazarda ilan kalmadı. Günü bitirince yeni tüccarlar gelir.</div>';
+        return;
+      }
+      el.innerHTML = state.listings.map(listing => `
+        <div class="listing">
+          ${icon(listing.item)}
+          <div>
+            <div class="name">${items[listing.item].name} x${listing.qty}</div>
+            <div class="meta">Satıcı: ${listing.seller}</div>
+          </div>
+          <div class="price">
+            <strong>${listing.price * listing.qty} akçe</strong>
+            <span class="meta">${listing.price}/adet</span>
+            <button class="small-btn" data-buy="${listing.id}" ${state.coins >= listing.price * listing.qty ? "" : "disabled"}>Satın Al</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderSellForm() {
+      const sellItem = document.getElementById("sellItem");
+      sellItem.innerHTML = Object.entries(items)
+        .filter(([id]) => state.inventory[id] > 0)
+        .map(([id, item]) => `<option value="${id}">${item.name} (${state.inventory[id]})</option>`)
+        .join("");
+      document.getElementById("sellBtn").disabled = !sellItem.value;
+    }
+
+    function renderDemand() {
+      const city = cities.find(c => c.id === state.city);
+      const rows = Object.keys(items).map(id => {
+        const mult = cityDemandMultiplier(id);
+        const label = mult > 1.1 ? "Yüksek talep" : mult < .9 ? "Bol arz" : "Dengeli";
+        const color = mult > 1.1 ? "var(--green)" : mult < .9 ? "var(--blue)" : "var(--muted)";
+        return `
+          <div class="city-row" style="grid-template-columns: 1fr auto; padding: 9px 10px; margin-bottom: 8px;">
+            <div>
+              <div class="name">${items[id].name}</div>
+              <div class="meta">${city.name}</div>
+            </div>
+            <strong style="color:${color}">${label}</strong>
+          </div>
+        `;
+      }).join("");
+      document.getElementById("demand").innerHTML = rows;
+    }
+
+    function renderFeed() {
+      document.getElementById("feed").innerHTML = state.feed.map(text => `<p>${text}</p>`).join("");
+    }
+
+    function renderStats() {
+      document.getElementById("coins").textContent = state.coins;
+      document.getElementById("rep").textContent = state.rep;
+      document.getElementById("day").textContent = state.day;
+    }
+
+    function renderAll() {
+      renderStats();
+      renderInventory();
+      renderRecipes();
+      renderCities();
+      renderMarket();
+      renderSellForm();
+      renderDemand();
+      renderFeed();
+    }
+
+    document.addEventListener("click", event => {
+      const tab = event.target.closest("[data-tab]");
+      if (tab) {
+        document.querySelectorAll(".tab").forEach(btn => btn.classList.toggle("active", btn === tab));
+        const market = tab.dataset.tab === "market";
+        document.getElementById("marketView").hidden = !market;
+        document.getElementById("sellView").hidden = market;
+      }
+
+      const cityBtn = event.target.closest("[data-city]");
+      if (cityBtn) {
+        state.city = cityBtn.dataset.city;
+        seedListings();
+        pushFeed(`${cities.find(c => c.id === state.city).name} pazarına vardın. Fiyatlar yeniden oluştu.`);
+        renderAll();
+      }
+
+      const craftBtn = event.target.closest("[data-craft]");
+      if (craftBtn) {
+        const recipe = recipes.find(r => r.id === craftBtn.dataset.craft);
+        if (recipe && canPay(recipe.cost)) {
+          spend(recipe.cost);
+          Object.entries(recipe.gain).forEach(([id, qty]) => state.inventory[id] += qty);
+          state.rep += recipe.rep;
+          pushFeed(`${recipe.label} üretildi. İtibar +${recipe.rep}.`);
+          renderAll();
+        }
+      }
+
+      const buyBtn = event.target.closest("[data-buy]");
+      if (buyBtn) {
+        const listing = state.listings.find(item => item.id === buyBtn.dataset.buy);
+        if (listing) {
+          const total = listing.price * listing.qty;
+          if (state.coins >= total) {
+            state.coins -= total;
+            state.inventory[listing.item] += listing.qty;
+            state.listings = state.listings.filter(item => item.id !== listing.id);
+            pushFeed(`${listing.seller} adlı oyuncudan ${listing.qty} ${items[listing.item].name} aldın.`);
+            renderAll();
+          }
+        }
+      }
+    });
+
+    document.getElementById("sellBtn").addEventListener("click", () => {
+      const item = document.getElementById("sellItem").value;
+      const qty = Math.max(1, Number(document.getElementById("sellQty").value || 1));
+      const price = Math.max(1, Number(document.getElementById("sellPrice").value || 1));
+      if (!item || state.inventory[item] < qty) return;
+      state.inventory[item] -= qty;
+      const saleChance = price <= fairPrice(item) ? .9 : .45;
+      if (Math.random() < saleChance) {
+        state.coins += qty * price;
+        state.rep += 1;
+        pushFeed(`${qty} ${items[item].name} ilanı satıldı. ${qty * price} akçe kazandın.`);
+      } else {
+        state.inventory[item] += qty;
+        pushFeed(`${items[item].name} ilanın pahalı kaldı, ürünler envantere döndü.`);
+      }
+      renderAll();
+    });
+
+    document.getElementById("nextDay").addEventListener("click", () => {
+      state.day += 1;
+      const gather = [["wood", rand(1, 3)], ["ore", rand(0, 2)], ["cloth", rand(0, 2)], ["spice", rand(0, 1)]];
+      gather.forEach(([id, qty]) => state.inventory[id] += qty);
+      const upkeep = Math.max(2, Math.floor(state.rep / 4));
+      state.coins = Math.max(0, state.coins - upkeep);
+      seedListings();
+      pushFeed(`Yeni gün: atölye kaynak topladı, pazar vergisi ${upkeep} akçe ödendi.`);
+      renderAll();
+    });
+
+    seedListings();
+    pushFeed("Pazar açıldı. İlk hedef: ucuza al, talebin yüksek olduğu şehirde sat.");
+    renderAll();
+  </script>
+</body>
+</html>

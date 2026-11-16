@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="560" viewBox="0 0 900 560">
+  <rect width="900" height="560" fill="#e9edf2"/>
+  <path d="M178 356h544l-46-108c-10-23-33-38-58-38H306c-24 0-46 14-57 35l-71 111z" fill="#212529"/>
+  <path d="M306 236h306c15 0 29 9 35 23l28 66H225l51-78c7-7 18-11 30-11z" fill="#f8c246"/>
+  <circle cx="292" cy="374" r="56" fill="#111"/><circle cx="292" cy="374" r="24" fill="#6c757d"/>
+  <circle cx="642" cy="374" r="56" fill="#111"/><circle cx="642" cy="374" r="24" fill="#6c757d"/>
+  <text x="450" y="146" text-anchor="middle" font-family="Arial" font-size="42" font-weight="700" fill="#212529">Rent a Car Premtimi</text>
+</svg>

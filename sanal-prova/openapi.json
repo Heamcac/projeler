@@ -1,0 +1,3664 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Virtual Fit API",
+    "version": "1.0.0",
+    "description": "Measurements: cm/kg. Prices: integer minor units. Demo outputs are schematic."
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {}
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/storefront/config": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "email",
+                  "password",
+                  "name"
+                ],
+                "properties": {
+                  "email": {
+                    "format": "email",
+                    "maxLength": 254,
+                    "type": "string"
+                  },
+                  "password": {
+                    "minLength": 12,
+                    "maxLength": 128,
+                    "type": "string"
+                  },
+                  "name": {
+                    "minLength": 1,
+                    "maxLength": 120,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "accessToken",
+                    "expiresIn",
+                    "user"
+                  ],
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    },
+                    "expiresIn": {
+                      "type": "integer"
+                    },
+                    "user": {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "name",
+                        "email",
+                        "role"
+                      ],
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "format": "email",
+                    "maxLength": 254,
+                    "type": "string"
+                  },
+                  "password": {
+                    "minLength": 12,
+                    "maxLength": 128,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "accessToken",
+                    "expiresIn",
+                    "user"
+                  ],
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    },
+                    "expiresIn": {
+                      "type": "integer"
+                    },
+                    "user": {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "name",
+                        "email",
+                        "role"
+                      ],
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/profile/measurements": {
+      "get": {
+        "tags": [
+          "profiles"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "height",
+                      "weight",
+                      "chest",
+                      "waist",
+                      "hips",
+                      "inseam",
+                      "outseam",
+                      "shoulderWidth",
+                      "bodyShapeType",
+                      "id",
+                      "userId",
+                      "name",
+                      "isDefault",
+                      "revision",
+                      "createdAt",
+                      "updatedAt"
+                    ],
+                    "properties": {
+                      "height": {
+                        "minimum": 80,
+                        "maximum": 250,
+                        "type": "number"
+                      },
+                      "weight": {
+                        "minimum": 15,
+                        "maximum": 350,
+                        "type": "number"
+                      },
+                      "chest": {
+                        "minimum": 30,
+                        "maximum": 250,
+                        "type": "number"
+                      },
+                      "waist": {
+                        "minimum": 25,
+                        "maximum": 250,
+                        "type": "number"
+                      },
+                      "hips": {
+                        "minimum": 30,
+                        "maximum": 250,
+                        "type": "number"
+                      },
+                      "inseam": {
+                        "minimum": 20,
+                        "maximum": 130,
+                        "type": "number"
+                      },
+                      "outseam": {
+                        "minimum": 20,
+                        "maximum": 250,
+                        "type": "number"
+                      },
+                      "shoulderWidth": {
+                        "minimum": 15,
+                        "maximum": 90,
+                        "type": "number"
+                      },
+                      "bodyShapeType": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "hourglass"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "pear"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "apple"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "rectangle"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "athletic"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "unspecified"
+                            ]
+                          }
+                        ]
+                      },
+                      "id": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "userId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "isDefault": {
+                        "type": "boolean"
+                      },
+                      "revision": {
+                        "type": "integer"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "profiles"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "height",
+                  "weight",
+                  "chest",
+                  "waist",
+                  "hips",
+                  "inseam",
+                  "outseam",
+                  "shoulderWidth",
+                  "bodyShapeType",
+                  "name"
+                ],
+                "properties": {
+                  "height": {
+                    "minimum": 80,
+                    "maximum": 250,
+                    "type": "number"
+                  },
+                  "weight": {
+                    "minimum": 15,
+                    "maximum": 350,
+                    "type": "number"
+                  },
+                  "chest": {
+                    "minimum": 30,
+                    "maximum": 250,
+                    "type": "number"
+                  },
+                  "waist": {
+                    "minimum": 25,
+                    "maximum": 250,
+                    "type": "number"
+                  },
+                  "hips": {
+                    "minimum": 30,
+                    "maximum": 250,
+                    "type": "number"
+                  },
+                  "inseam": {
+                    "minimum": 20,
+                    "maximum": 130,
+                    "type": "number"
+                  },
+                  "outseam": {
+                    "minimum": 20,
+                    "maximum": 250,
+                    "type": "number"
+                  },
+                  "shoulderWidth": {
+                    "minimum": 15,
+                    "maximum": 90,
+                    "type": "number"
+                  },
+                  "bodyShapeType": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "hourglass"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "pear"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "apple"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "rectangle"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "athletic"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "unspecified"
+                        ]
+                      }
+                    ]
+                  },
+                  "name": {
+                    "minLength": 1,
+                    "maxLength": 80,
+                    "type": "string"
+                  },
+                  "profileId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "expectedRevision": {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "isDefault": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "height",
+                    "weight",
+                    "chest",
+                    "waist",
+                    "hips",
+                    "inseam",
+                    "outseam",
+                    "shoulderWidth",
+                    "bodyShapeType",
+                    "id",
+                    "userId",
+                    "name",
+                    "isDefault",
+                    "revision",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "properties": {
+                    "height": {
+                      "minimum": 80,
+                      "maximum": 250,
+                      "type": "number"
+                    },
+                    "weight": {
+                      "minimum": 15,
+                      "maximum": 350,
+                      "type": "number"
+                    },
+                    "chest": {
+                      "minimum": 30,
+                      "maximum": 250,
+                      "type": "number"
+                    },
+                    "waist": {
+                      "minimum": 25,
+                      "maximum": 250,
+                      "type": "number"
+                    },
+                    "hips": {
+                      "minimum": 30,
+                      "maximum": 250,
+                      "type": "number"
+                    },
+                    "inseam": {
+                      "minimum": 20,
+                      "maximum": 130,
+                      "type": "number"
+                    },
+                    "outseam": {
+                      "minimum": 20,
+                      "maximum": 250,
+                      "type": "number"
+                    },
+                    "shoulderWidth": {
+                      "minimum": 15,
+                      "maximum": 90,
+                      "type": "number"
+                    },
+                    "bodyShapeType": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "hourglass"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "pear"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "apple"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "rectangle"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "athletic"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "unspecified"
+                          ]
+                        }
+                      ]
+                    },
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "isDefault": {
+                      "type": "boolean"
+                    },
+                    "revision": {
+                      "type": "integer"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "height",
+                    "weight",
+                    "chest",
+                    "waist",
+                    "hips",
+                    "inseam",
+                    "outseam",
+                    "shoulderWidth",
+                    "bodyShapeType",
+                    "id",
+                    "userId",
+                    "name",
+                    "isDefault",
+                    "revision",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "properties": {
+                    "height": {
+                      "minimum": 80,
+                      "maximum": 250,
+                      "type": "number"
+                    },
+                    "weight": {
+                      "minimum": 15,
+                      "maximum": 350,
+                      "type": "number"
+                    },
+                    "chest": {
+                      "minimum": 30,
+                      "maximum": 250,
+                      "type": "number"
+                    },
+                    "waist": {
+                      "minimum": 25,
+                      "maximum": 250,
+                      "type": "number"
+                    },
+                    "hips": {
+                      "minimum": 30,
+                      "maximum": 250,
+                      "type": "number"
+                    },
+                    "inseam": {
+                      "minimum": 20,
+                      "maximum": 130,
+                      "type": "number"
+                    },
+                    "outseam": {
+                      "minimum": 20,
+                      "maximum": 250,
+                      "type": "number"
+                    },
+                    "shoulderWidth": {
+                      "minimum": 15,
+                      "maximum": 90,
+                      "type": "number"
+                    },
+                    "bodyShapeType": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "hourglass"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "pear"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "apple"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "rectangle"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "athletic"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "unspecified"
+                          ]
+                        }
+                      ]
+                    },
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "userId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "isDefault": {
+                      "type": "boolean"
+                    },
+                    "revision": {
+                      "type": "integer"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/profile/measurements/{id}": {
+      "delete": {
+        "tags": [
+          "profiles"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/products": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
+          },
+          {
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "type": "integer"
+            },
+            "in": "query",
+            "name": "limit",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/products/{id}": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/products/{id}/fit-check": {
+      "get": {
+        "tags": [
+          "fit"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "query",
+            "name": "profileId",
+            "required": true
+          },
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "query",
+            "name": "variantId",
+            "required": false
+          },
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "variantId",
+                    "profileRevision",
+                    "fit"
+                  ],
+                  "properties": {
+                    "variantId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "profileRevision": {
+                      "type": "integer"
+                    },
+                    "fit": {
+                      "type": "object",
+                      "required": [
+                        "overallScore",
+                        "fitVerdict",
+                        "verdictCode",
+                        "recommendedSize",
+                        "recommendedVariantId",
+                        "algorithmVersion",
+                        "confidence",
+                        "warnings",
+                        "dimensions"
+                      ],
+                      "properties": {
+                        "overallScore": {
+                          "minimum": 1,
+                          "maximum": 100,
+                          "type": "integer"
+                        },
+                        "fitVerdict": {
+                          "type": "string"
+                        },
+                        "verdictCode": {
+                          "type": "string"
+                        },
+                        "recommendedSize": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "recommendedVariantId": {
+                          "format": "uuid",
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "algorithmVersion": {
+                          "type": "string"
+                        },
+                        "confidence": {
+                          "type": "string",
+                          "enum": [
+                            "measurement_based"
+                          ]
+                        },
+                        "warnings": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "dimensions": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "dimension",
+                              "score",
+                              "bodyCm",
+                              "garmentCm",
+                              "differenceCm",
+                              "comfortStretchCm",
+                              "status"
+                            ],
+                            "properties": {
+                              "dimension": {
+                                "type": "string"
+                              },
+                              "score": {
+                                "type": "integer"
+                              },
+                              "bodyCm": {
+                                "type": "number"
+                              },
+                              "garmentCm": {
+                                "type": "number"
+                              },
+                              "differenceCm": {
+                                "type": "number"
+                              },
+                              "comfortStretchCm": {
+                                "type": "number"
+                              },
+                              "status": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/products/{id}/try-on": {
+      "post": {
+        "tags": [
+          "try-on"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "profileId",
+                  "variantId",
+                  "mode"
+                ],
+                "properties": {
+                  "profileId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "variantId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "mode": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "ai"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "3d"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          },
+          {
+            "schema": {
+              "minLength": 8,
+              "maxLength": 128,
+              "type": "string"
+            },
+            "in": "header",
+            "name": "idempotency-key",
+            "required": false
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "jobId",
+                    "status",
+                    "cached",
+                    "statusUrl",
+                    "expiresAt"
+                  ],
+                  "properties": {
+                    "jobId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "cached": {
+                      "type": "boolean"
+                    },
+                    "statusUrl": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "jobId",
+                    "status",
+                    "cached",
+                    "statusUrl",
+                    "expiresAt"
+                  ],
+                  "properties": {
+                    "jobId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "cached": {
+                      "type": "boolean"
+                    },
+                    "statusUrl": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/try-on/jobs/{id}": {
+      "get": {
+        "tags": [
+          "try-on"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "jobId",
+                    "status",
+                    "result",
+                    "errorCode",
+                    "expiresAt"
+                  ],
+                  "properties": {
+                    "jobId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "result": {
+                      "additionalProperties": true,
+                      "type": "object",
+                      "properties": {},
+                      "nullable": true
+                    },
+                    "errorCode": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "expiresAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/try-on/jobs/{id}/preview": {
+      "get": {
+        "tags": [
+          "try-on"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/webhooks/vton": {
+      "post": {
+        "tags": [
+          "webhooks"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "eventId",
+                  "jobId",
+                  "status"
+                ],
+                "properties": {
+                  "eventId": {
+                    "minLength": 1,
+                    "maxLength": 150,
+                    "type": "string"
+                  },
+                  "jobId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "status": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "succeeded"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "failed"
+                        ]
+                      }
+                    ]
+                  },
+                  "imageUrl": {
+                    "format": "uri",
+                    "maxLength": 2048,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "x-vton-timestamp",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "x-vton-signature",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/feed/tailored": {
+      "get": {
+        "tags": [
+          "fit"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "query",
+            "name": "profileId",
+            "required": true
+          },
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
+          },
+          {
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "type": "integer"
+            },
+            "in": "query",
+            "name": "limit",
+            "required": false
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "items",
+                    "nextCursor",
+                    "scanned"
+                  ],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "productId",
+                          "productName",
+                          "variantId",
+                          "size",
+                          "priceCents",
+                          "currency",
+                          "fit"
+                        ],
+                        "properties": {
+                          "productId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "productName": {
+                            "type": "string"
+                          },
+                          "variantId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "size": {
+                            "type": "string"
+                          },
+                          "priceCents": {
+                            "type": "integer"
+                          },
+                          "currency": {
+                            "type": "string"
+                          },
+                          "fit": {
+                            "type": "object",
+                            "required": [
+                              "overallScore",
+                              "fitVerdict",
+                              "verdictCode",
+                              "recommendedSize",
+                              "recommendedVariantId",
+                              "algorithmVersion",
+                              "confidence",
+                              "warnings",
+                              "dimensions"
+                            ],
+                            "properties": {
+                              "overallScore": {
+                                "minimum": 1,
+                                "maximum": 100,
+                                "type": "integer"
+                              },
+                              "fitVerdict": {
+                                "type": "string"
+                              },
+                              "verdictCode": {
+                                "type": "string"
+                              },
+                              "recommendedSize": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "recommendedVariantId": {
+                                "format": "uuid",
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "algorithmVersion": {
+                                "type": "string"
+                              },
+                              "confidence": {
+                                "type": "string",
+                                "enum": [
+                                  "measurement_based"
+                                ]
+                              },
+                              "warnings": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "dimensions": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "required": [
+                                    "dimension",
+                                    "score",
+                                    "bodyCm",
+                                    "garmentCm",
+                                    "differenceCm",
+                                    "comfortStretchCm",
+                                    "status"
+                                  ],
+                                  "properties": {
+                                    "dimension": {
+                                      "type": "string"
+                                    },
+                                    "score": {
+                                      "type": "integer"
+                                    },
+                                    "bodyCm": {
+                                      "type": "number"
+                                    },
+                                    "garmentCm": {
+                                      "type": "number"
+                                    },
+                                    "differenceCm": {
+                                      "type": "number"
+                                    },
+                                    "comfortStretchCm": {
+                                      "type": "number"
+                                    },
+                                    "status": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "nextCursor": {
+                      "format": "uuid",
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "scanned": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders": {
+      "post": {
+        "tags": [
+          "orders"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "items",
+                  "shippingAddress"
+                ],
+                "properties": {
+                  "profileId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "items": {
+                    "minItems": 1,
+                    "maxItems": 30,
+                    "type": "array",
+                    "items": {
+                      "additionalProperties": false,
+                      "type": "object",
+                      "required": [
+                        "variantId",
+                        "quantity"
+                      ],
+                      "properties": {
+                        "variantId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "quantity": {
+                          "minimum": 1,
+                          "maximum": 10,
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "shippingAddress": {
+                    "additionalProperties": false,
+                    "type": "object",
+                    "required": [
+                      "name",
+                      "address",
+                      "city",
+                      "postalCode"
+                    ],
+                    "properties": {
+                      "name": {
+                        "minLength": 1,
+                        "maxLength": 120,
+                        "type": "string"
+                      },
+                      "address": {
+                        "minLength": 5,
+                        "maxLength": 500,
+                        "type": "string"
+                      },
+                      "city": {
+                        "minLength": 1,
+                        "maxLength": 100,
+                        "type": "string"
+                      },
+                      "postalCode": {
+                        "minLength": 1,
+                        "maxLength": 20,
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "minLength": 8,
+              "maxLength": 128,
+              "type": "string"
+            },
+            "in": "header",
+            "name": "idempotency-key",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "orders"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
+          },
+          {
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "type": "integer"
+            },
+            "in": "query",
+            "name": "limit",
+            "required": false
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{id}": {
+      "get": {
+        "tags": [
+          "orders"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/orders/{id}/cancel": {
+      "post": {
+        "tags": [
+          "orders"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/returns": {
+      "post": {
+        "tags": [
+          "returns"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "orderItemId",
+                  "reason",
+                  "mismatchAreas"
+                ],
+                "properties": {
+                  "orderItemId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "size_mismatch"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "damaged"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "not_as_described"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "other"
+                        ]
+                      }
+                    ]
+                  },
+                  "mismatchAreas": {
+                    "maxItems": 5,
+                    "uniqueItems": true,
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "waist"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "hips"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "chest"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "inseam"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "shoulderWidth"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "comment": {
+                    "maxLength": 1000,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/admin/orders/{id}/status": {
+      "patch": {
+        "tags": [
+          "orders"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "status"
+                ],
+                "properties": {
+                  "status": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "paid"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "shipped"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "delivered"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/seller/variants/{id}/measurements": {
+      "put": {
+        "tags": [
+          "seller"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "waist",
+                  "hips",
+                  "chest",
+                  "inseam",
+                  "outseam",
+                  "totalLength",
+                  "hemWidth",
+                  "shoulderWidth",
+                  "expectedRevision",
+                  "source"
+                ],
+                "properties": {
+                  "waist": {
+                    "minimum": 20,
+                    "maximum": 300,
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "hips": {
+                    "minimum": 20,
+                    "maximum": 300,
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "chest": {
+                    "minimum": 20,
+                    "maximum": 300,
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "inseam": {
+                    "minimum": 10,
+                    "maximum": 150,
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "outseam": {
+                    "minimum": 10,
+                    "maximum": 250,
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "totalLength": {
+                    "minimum": 10,
+                    "maximum": 250,
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "hemWidth": {
+                    "minimum": 1,
+                    "maximum": 150,
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "shoulderWidth": {
+                    "minimum": 10,
+                    "maximum": 100,
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "expectedRevision": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "source": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "manual"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "seller_table"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/stores/{id}/metrics": {
+      "get": {
+        "tags": [
+          "seller"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/admin/vendors": {
+      "post": {
+        "tags": [
+          "seller"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "ownerId",
+                  "legalName",
+                  "taxId",
+                  "storeName",
+                  "storeSlug",
+                  "commissionBps"
+                ],
+                "properties": {
+                  "ownerId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "legalName": {
+                    "minLength": 2,
+                    "maxLength": 200,
+                    "type": "string"
+                  },
+                  "taxId": {
+                    "minLength": 5,
+                    "maxLength": 40,
+                    "type": "string"
+                  },
+                  "storeName": {
+                    "minLength": 2,
+                    "maxLength": 150,
+                    "type": "string"
+                  },
+                  "storeSlug": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "maxLength": 100,
+                    "type": "string"
+                  },
+                  "commissionBps": {
+                    "minimum": 0,
+                    "maximum": 10000,
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/categories": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/brands": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/admin/categories": {
+      "post": {
+        "tags": [
+          "seller"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "name",
+                  "slug"
+                ],
+                "properties": {
+                  "name": {
+                    "minLength": 1,
+                    "maxLength": 100,
+                    "type": "string"
+                  },
+                  "slug": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "maxLength": 100,
+                    "type": "string"
+                  },
+                  "parentId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/seller/stores": {
+      "get": {
+        "tags": [
+          "seller"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/seller/products": {
+      "post": {
+        "tags": [
+          "seller"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "storeId",
+                  "categoryId",
+                  "name",
+                  "description",
+                  "garmentType",
+                  "cut",
+                  "fabric",
+                  "variants"
+                ],
+                "properties": {
+                  "storeId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "categoryId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "brandId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "name": {
+                    "minLength": 1,
+                    "maxLength": 200,
+                    "type": "string"
+                  },
+                  "description": {
+                    "minLength": 1,
+                    "maxLength": 10000,
+                    "type": "string"
+                  },
+                  "garmentType": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "bottom"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "top"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "dress"
+                        ]
+                      }
+                    ]
+                  },
+                  "cut": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "slim"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "regular"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "relaxed"
+                        ]
+                      }
+                    ]
+                  },
+                  "fabric": {
+                    "additionalProperties": false,
+                    "type": "object",
+                    "required": [
+                      "cottonPct",
+                      "elastanePct",
+                      "polyesterPct",
+                      "otherPct",
+                      "elasticityRatio",
+                      "elasticitySource"
+                    ],
+                    "properties": {
+                      "cottonPct": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": "integer"
+                      },
+                      "elastanePct": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": "integer"
+                      },
+                      "polyesterPct": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": "integer"
+                      },
+                      "otherPct": {
+                        "minimum": 0,
+                        "maximum": 100,
+                        "type": "integer"
+                      },
+                      "elasticityRatio": {
+                        "minimum": 0,
+                        "maximum": 0.5,
+                        "type": "number"
+                      },
+                      "elasticitySource": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "measured"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "supplier_test"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "variants": {
+                    "minItems": 1,
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "additionalProperties": false,
+                      "type": "object",
+                      "required": [
+                        "sku",
+                        "size",
+                        "color",
+                        "priceCents",
+                        "currency",
+                        "stock",
+                        "measurements",
+                        "assets"
+                      ],
+                      "properties": {
+                        "sku": {
+                          "minLength": 1,
+                          "maxLength": 100,
+                          "type": "string"
+                        },
+                        "size": {
+                          "minLength": 1,
+                          "maxLength": 30,
+                          "type": "string"
+                        },
+                        "color": {
+                          "minLength": 1,
+                          "maxLength": 80,
+                          "type": "string"
+                        },
+                        "priceCents": {
+                          "minimum": 1,
+                          "maximum": 100000000,
+                          "type": "integer"
+                        },
+                        "currency": {
+                          "pattern": "^[A-Z]{3}$",
+                          "type": "string"
+                        },
+                        "stock": {
+                          "minimum": 0,
+                          "maximum": 100000,
+                          "type": "integer"
+                        },
+                        "measurements": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "waist",
+                            "hips",
+                            "chest",
+                            "inseam",
+                            "outseam",
+                            "totalLength",
+                            "hemWidth",
+                            "shoulderWidth",
+                            "source"
+                          ],
+                          "properties": {
+                            "waist": {
+                              "minimum": 20,
+                              "maximum": 300,
+                              "type": "number",
+                              "nullable": true
+                            },
+                            "hips": {
+                              "minimum": 20,
+                              "maximum": 300,
+                              "type": "number",
+                              "nullable": true
+                            },
+                            "chest": {
+                              "minimum": 20,
+                              "maximum": 300,
+                              "type": "number",
+                              "nullable": true
+                            },
+                            "inseam": {
+                              "minimum": 10,
+                              "maximum": 150,
+                              "type": "number",
+                              "nullable": true
+                            },
+                            "outseam": {
+                              "minimum": 10,
+                              "maximum": 250,
+                              "type": "number",
+                              "nullable": true
+                            },
+                            "totalLength": {
+                              "minimum": 10,
+                              "maximum": 250,
+                              "type": "number",
+                              "nullable": true
+                            },
+                            "hemWidth": {
+                              "minimum": 1,
+                              "maximum": 150,
+                              "type": "number",
+                              "nullable": true
+                            },
+                            "shoulderWidth": {
+                              "minimum": 10,
+                              "maximum": 100,
+                              "type": "number",
+                              "nullable": true
+                            },
+                            "source": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "manual"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "seller_table"
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "assets": {
+                          "maxItems": 5,
+                          "type": "array",
+                          "items": {
+                            "additionalProperties": false,
+                            "type": "object",
+                            "required": [
+                              "type",
+                              "url",
+                              "sha256"
+                            ],
+                            "properties": {
+                              "type": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "front"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "back"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "mask"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "glb"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "gltf"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "url": {
+                                "format": "uri",
+                                "maxLength": 2048,
+                                "type": "string"
+                              },
+                              "sha256": {
+                                "pattern": "^[a-f0-9]{64}$",
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/v1/seller/products/{id}": {
+      "patch": {
+        "tags": [
+          "seller"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "active"
+                ],
+                "properties": {
+                  "active": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    }
+  }
+}

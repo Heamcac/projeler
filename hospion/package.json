@@ -1,0 +1,21 @@
+{
+  "name": "hospion",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w @hospion/api\" \"npm run dev -w @hospion/web\"",
+    "build": "npm run build -w @hospion/api && npm run build -w @hospion/web",
+    "lint": "npm run lint -w @hospion/api && npm run lint -w @hospion/web",
+    "test": "npm run test -w @hospion/api",
+    "db:migrate": "npm run db:migrate -w @hospion/api",
+    "db:seed": "npm run db:seed -w @hospion/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prettier": "^3.4.2"
+  }
+}

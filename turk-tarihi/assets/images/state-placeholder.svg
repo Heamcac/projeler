@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Türk tarihi varsayılan görseli</title>
+  <desc id="desc">Koyu lacivert zemin üzerinde altın renkli tarih müzesi kompozisyonu.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#071421"/>
+      <stop offset="0.52" stop-color="#0b3540"/>
+      <stop offset="1" stop-color="#071421"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="42%" r="48%">
+      <stop offset="0" stop-color="#d8ad55" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#d8ad55" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <rect width="1200" height="675" fill="url(#glow)"/>
+  <path d="M120 505 C270 415 390 455 520 370 C670 272 790 296 1080 155" fill="none" stroke="#8de2d8" stroke-width="3" opacity=".45"/>
+  <path d="M148 520 C300 452 430 480 590 392 C746 306 875 323 1052 212" fill="none" stroke="#d8ad55" stroke-width="5" opacity=".8"/>
+  <circle cx="600" cy="330" r="112" fill="none" stroke="#d8ad55" stroke-width="4" opacity=".7"/>
+  <path d="M600 198 L624 294 L724 294 L642 350 L674 450 L600 388 L526 450 L558 350 L476 294 L576 294 Z" fill="#d8ad55" opacity=".86"/>
+  <text x="600" y="574" text-anchor="middle" fill="#f0d79a" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="700">TÜRK TARİHİ DEMO 2</text>
+</svg>
+

@@ -1,0 +1,190 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum NotificationChannel {
+  EMAIL
+  SMS
+}
+
+enum NotificationEvent {
+  BOOKING_CREATED
+  OWNER_NEW_BOOKING
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED
+  BOOKING_COMPLETED
+  OWNER_CUSTOMER_CANCELLED
+  REMINDER_EARLY
+  REMINDER_LATE
+}
+
+enum NotificationStatus {
+  QUEUED
+  SENDING
+  SENT
+  FAILED
+  SKIPPED
+}
+
+model AdminUser {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  passwordHash String
+  passwordChangeRequired Boolean @default(true)
+  sessions     AdminSession[]
+}
+
+model AdminSession {
+  tokenHash String    @id
+  adminId   String
+  expiresAt DateTime
+  admin     AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([expiresAt])
+}
+
+model RateLimit {
+  key       String   @id
+  count     Int
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
+
+model LoginThrottle {
+  key       String   @id
+  failures  Int
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model CcCategory {
+  id       String      @id
+  label    String
+  sort     Int
+  prices   PriceItem[]
+  bookings Booking[]
+}
+
+model Service {
+  id              String           @id @default(cuid())
+  name            String
+  durationMinutes Int
+  isActive        Boolean          @default(true)
+  archivedAt      DateTime?
+  sort            Int              @default(0)
+  prices          PriceItem[]
+  bookings        BookingService[]
+}
+
+model PriceItem {
+  ccCategoryId String
+  serviceId    String
+  minPrice     Int
+  maxPrice     Int
+  isActive     Boolean    @default(true)
+  category     CcCategory @relation(fields: [ccCategoryId], references: [id])
+  service      Service    @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([ccCategoryId, serviceId])
+}
+
+model Booking {
+  id           String           @id @default(cuid())
+  code         String           @unique
+  customerName String
+  phone        String
+  email        String?
+  bikeBrand    String
+  bikeModel    String
+  bikeYear     Int
+  plate        String?
+  ccCategoryId String
+  date         String
+  timeSlot     String
+  status       BookingStatus    @default(PENDING)
+  note         String?
+  createdAt    DateTime         @default(now())
+  category     CcCategory       @relation(fields: [ccCategoryId], references: [id])
+  services     BookingService[]
+  adminNotes   BookingNote[]
+  notificationConsentAt DateTime?
+  closedAt              DateTime?
+  anonymizedAt          DateTime?
+  notifications NotificationLog[]
+
+  @@index([date, timeSlot, status])
+  @@index([status, date])
+  @@index([anonymizedAt, date])
+}
+
+model NotificationLog {
+  id            String                @id @default(cuid())
+  bookingId     String
+  channel       NotificationChannel
+  event         NotificationEvent
+  status        NotificationStatus    @default(QUEUED)
+  attempts      Int                   @default(0)
+  errorMessage  String?
+  nextAttemptAt DateTime?
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  booking       Booking               @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@unique([bookingId, event, channel])
+  @@index([status, nextAttemptAt])
+  @@index([bookingId, createdAt])
+  @@index([createdAt])
+}
+
+model BookingService {
+  bookingId String
+  serviceId String
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+
+  @@id([bookingId, serviceId])
+}
+
+model BookingNote {
+  id        String   @id @default(cuid())
+  bookingId String
+  text      String
+  createdAt DateTime @default(now())
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+}
+
+model WorkingHours {
+  weekday    Int     @id
+  opens      String
+  closes     String
+  isClosed   Boolean @default(false)
+  slotMinutes Int    @default(60)
+  maxPerSlot Int     @default(2)
+}
+
+model Holiday {
+  date  String @id
+  label String
+}

@@ -1,0 +1,9 @@
+.env
+logs/*.log
+assets/uploads/*
+!assets/uploads/.gitkeep
+node_modules/
+vendor/
+*.tmp
+*.bak
+

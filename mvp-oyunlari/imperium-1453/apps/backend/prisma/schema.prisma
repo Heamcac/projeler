@@ -1,0 +1,148 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Faction {
+  id                    String                 @id
+  name                  String
+  rulerName             String
+  governmentType        String
+  religion              String
+  cultureGroup          String
+  treasury              Int
+  manpower              Int
+  foodStockpile         Int
+  stability             Int
+  prestige              Int
+  legitimacy            Int
+  technologyLevel       Int
+  diplomaticRelations   Json
+  ownedProvinces        Province[]             @relation("ProvinceOwner")
+  controlledProvinces   Province[]             @relation("ProvinceController")
+  armies                Army[]
+  diplomaticRelationsA  DiplomaticRelation[]   @relation("FactionA")
+  diplomaticRelationsB  DiplomaticRelation[]   @relation("FactionB")
+}
+
+model Province {
+  id                  String   @id
+  name                String
+  terrain             String
+  ownerFactionId      String
+  controllerFactionId String
+  population          Int
+  taxIncome           Int
+  foodProduction      Int
+  manpower            Int
+  fortLevel           Int
+  portLevel           Int
+  tradeValue          Int
+  culture             String
+  religion            String
+  neighbors           String[]
+  x                   Int
+  y                   Int
+  owner               Faction  @relation("ProvinceOwner", fields: [ownerFactionId], references: [id])
+  controller          Faction  @relation("ProvinceController", fields: [controllerFactionId], references: [id])
+  armies              Army[]
+  sieges              Siege[]
+}
+
+model Army {
+  id            String          @id @default(cuid())
+  name          String
+  factionId     String
+  provinceId    String
+  morale        Float           @default(1)
+  supply        Float           @default(1)
+  fatigue       Float           @default(0)
+  commanderName String?
+  commanderSkill Int            @default(1)
+  faction       Faction         @relation(fields: [factionId], references: [id])
+  province      Province        @relation(fields: [provinceId], references: [id])
+  unitStacks    UnitStack[]
+  orders        MovementOrder[]
+}
+
+model UnitStack {
+  id       String @id @default(cuid())
+  armyId   String
+  unitType String
+  count    Int
+  army     Army   @relation(fields: [armyId], references: [id])
+}
+
+model MovementOrder {
+  id             String   @id @default(cuid())
+  armyId         String
+  fromProvinceId String
+  toProvinceId   String
+  status         String   @default("queued")
+  departAt       DateTime @default(now())
+  arriveAt       DateTime
+  army           Army     @relation(fields: [armyId], references: [id])
+}
+
+model Siege {
+  id                 String   @id @default(cuid())
+  provinceId         String
+  attackerFactionId  String
+  defenderFactionId  String
+  progress           Float    @default(0)
+  defenderMorale     Float    @default(1)
+  foodSupply         Int
+  artilleryStrength  Int
+  navalBlockade      Boolean  @default(false)
+  startedAt          DateTime @default(now())
+  province           Province @relation(fields: [provinceId], references: [id])
+}
+
+model Battle {
+  id         String   @id @default(cuid())
+  provinceId String
+  status     String   @default("active")
+  startedAt  DateTime @default(now())
+  resolvedAt DateTime?
+  log        Json
+}
+
+model DiplomaticRelation {
+  id         String  @id @default(cuid())
+  factionAId String
+  factionBId String
+  stance     String
+  trust      Int     @default(0)
+  tribute    Int     @default(0)
+  factionA   Faction @relation("FactionA", fields: [factionAId], references: [id])
+  factionB   Faction @relation("FactionB", fields: [factionBId], references: [id])
+
+  @@unique([factionAId, factionBId])
+}
+
+model Technology {
+  id          String @id
+  name        String
+  description String
+  maxLevel    Int
+}
+
+model EventDefinition {
+  id          String @id
+  name        String
+  description String
+  trigger     Json
+  effects     Json
+  enabled     Boolean @default(true)
+}
+
+model GameEvent {
+  id        String   @id @default(cuid())
+  eventId   String
+  payload   Json
+  createdAt DateTime @default(now())
+}
